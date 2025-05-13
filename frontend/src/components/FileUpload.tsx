@@ -3,7 +3,12 @@ import { useSession } from 'next-auth/react';
 import { Button, Box, Typography, LinearProgress, Alert } from '@mui/material';
 import { Upload as UploadIcon } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Create Supabase client directly
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface FileUploadProps {
   onUploadComplete: (fileData: any) => void;
