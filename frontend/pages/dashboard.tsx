@@ -12,7 +12,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Tooltip
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -20,6 +21,21 @@ import { useSession, getSession } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
 import api from '../src/services/api';
 import AddIcon from '@mui/icons-material/Add';
+
+// Language map for display purposes
+const LANGUAGE_MAP: Record<string, string> = {
+  'en': 'English',
+  'es': 'Spanish',
+  'fr': 'French',
+  'de': 'German',
+  'it': 'Italian',
+  'pt': 'Portuguese',
+  'ru': 'Russian',
+  'ja': 'Japanese',
+  'zh': 'Chinese',
+  'ko': 'Korean',
+  'ar': 'Arabic',
+};
 
 // Define types for file metadata
 interface FileMetadata {
@@ -29,6 +45,7 @@ interface FileMetadata {
   duration_seconds: number;
   upload_date: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
+  language?: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -90,6 +107,12 @@ const Dashboard: React.FC = () => {
     });
   };
 
+  // Get language name from code
+  const getLanguageName = (code?: string): string => {
+    if (!code) return 'English (default)';
+    return LANGUAGE_MAP[code] || code;
+  };
+
   return (
     <>
       <Head>
@@ -145,6 +168,7 @@ const Dashboard: React.FC = () => {
                     <TableCell>Filename</TableCell>
                     <TableCell>Size</TableCell>
                     <TableCell>Duration</TableCell>
+                    <TableCell>Language</TableCell>
                     <TableCell>Uploaded</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell align="right">Actions</TableCell>
@@ -156,6 +180,7 @@ const Dashboard: React.FC = () => {
                       <TableCell>{file.filename}</TableCell>
                       <TableCell>{formatFileSize(file.size)}</TableCell>
                       <TableCell>{formatDuration(file.duration_seconds)}</TableCell>
+                      <TableCell>{getLanguageName(file.language)}</TableCell>
                       <TableCell>{formatDate(file.upload_date)}</TableCell>
                       <TableCell>
                         <Box

@@ -8,7 +8,8 @@ import {
   LinearProgress,
   Alert,
   TextField,
-  IconButton
+  IconButton,
+  Divider
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -17,6 +18,7 @@ import { GetServerSideProps } from 'next';
 import api from '../src/services/api';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { LanguageSelector } from '../src/components/transcription';
 
 const TranscribePage: React.FC = () => {
   const router = useRouter();
@@ -25,6 +27,7 @@ const TranscribePage: React.FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +57,7 @@ const TranscribePage: React.FC = () => {
       // Create form data
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('language', selectedLanguage);
       
       // Mock progress updates (since we don't have real progress events)
       const progressInterval = setInterval(() => {
@@ -86,6 +90,10 @@ const TranscribePage: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
+  };
+
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
   };
 
   return (
@@ -156,8 +164,16 @@ const TranscribePage: React.FC = () => {
               )}
             </Box>
             
+            <Divider sx={{ my: 3 }} />
+            
+            <LanguageSelector 
+              selectedLanguage={selectedLanguage}
+              onChange={handleLanguageChange}
+              disabled={uploading}
+            />
+            
             {uploading && (
-              <Box sx={{ mb: 3 }}>
+              <Box sx={{ mb: 3, mt: 3 }}>
                 <LinearProgress 
                   variant="determinate" 
                   value={uploadProgress} 
@@ -177,6 +193,7 @@ const TranscribePage: React.FC = () => {
               disabled={!selectedFile || uploading}
               onClick={handleUpload}
               startIcon={<CloudUploadIcon />}
+              sx={{ mt: 2 }}
             >
               {uploading ? 'Uploading...' : 'Upload and Transcribe'}
             </Button>

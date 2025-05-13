@@ -40,6 +40,7 @@ interface FileMetadata {
   duration_seconds: number;
   upload_date: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
+  language?: string;
 }
 
 interface TranscriptionData {
@@ -49,6 +50,7 @@ interface TranscriptionData {
   timestamps: Record<string, string>;
   created_at: string;
   updated_at: string;
+  language: string;
 }
 
 // Add a request interceptor to include authentication token
@@ -138,8 +140,8 @@ export const api = {
   
   // Transcription endpoints
   transcriptions: {
-    create: (fileId: string): Promise<TranscriptionData> => 
-      apiRequest('post', '/transcriptions', { file_id: fileId }),
+    create: (fileId: string, language: string = 'en'): Promise<TranscriptionData> => 
+      apiRequest('post', '/transcriptions', { file_id: fileId, language }),
     getById: (id: string): Promise<TranscriptionData> => 
       apiRequest('get', `/transcriptions/${id}`),
     getAll: (): Promise<TranscriptionData[]> => 
