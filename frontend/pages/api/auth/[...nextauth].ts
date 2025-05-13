@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../../src/lib/supabase';
 
 // Define custom user type to include accessToken
 interface CustomUser {
