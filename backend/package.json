@@ -1,0 +1,12 @@
+{
+  "name": "transcriptpro-backend",
+  "version": "1.0.0",
+  "description": "Backend for TranscriptPro application",
+  "main": "app/main.py",
+  "scripts": {
+    "start": "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+} 
