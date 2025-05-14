@@ -6,6 +6,8 @@ passlib[bcrypt]==1.7.4
 sqlalchemy==2.0.9
 # Replacing psycopg2-binary with pg8000 which is a pure Python PostgreSQL adapter
 pg8000==1.29.8
+# Adding asyncpg for async database connections
+asyncpg==0.30.0
 pydantic==1.10.7
 alembic==1.10.3
 python-dotenv==1.0.0
