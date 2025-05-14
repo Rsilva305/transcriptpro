@@ -13,10 +13,15 @@ app = FastAPI(
     docs_url=f"{settings.API_V1_STR}/docs",
 )
 
-# Set up CORS middleware
+# Set up CORS middleware with safe fallback
+origins = settings.BACKEND_CORS_ORIGINS
+if not origins:
+    # Fallback to allow common development and production domains
+    origins = ["http://localhost:3000", "https://transcriptpro.vercel.app"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_origins=[str(origin) for origin in origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

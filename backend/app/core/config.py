@@ -1,5 +1,6 @@
 import os
 import secrets
+import json
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, PostgresDsn, validator
@@ -13,15 +14,25 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "AI Transcription Service"
     
     # CORS Configuration
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    BACKEND_CORS_ORIGINS: List[str] = []
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
-        raise ValueError(v)
+        if isinstance(v, str):
+            # Try parsing as JSON
+            try:
+                if v.startswith("[") and v.endswith("]"):
+                    return json.loads(v)
+            except:
+                pass
+            
+            # Try comma-separated format
+            if "," in v:
+                return [i.strip() for i in v.split(",")]
+                
+            # Single URL
+            return [v]
+        return v or ["http://localhost:3000"]  # Default to localhost if empty
 
     # Database Configuration
     POSTGRES_SERVER: str = "localhost"
