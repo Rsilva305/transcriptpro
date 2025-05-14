@@ -19,8 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
-# Set default port
-ENV PORT=8000
+# Make start script executable
+RUN chmod +x start.sh
 
-# Use the CMD instruction with shell form to ensure variable substitution works
-CMD sh -c "uvicorn app.main:app --host 0.0.0.0 --port $PORT" 
+# Use a simple hardcoded command 
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
